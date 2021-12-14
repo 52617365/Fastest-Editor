@@ -17,13 +17,9 @@ void logic::remove_special_characters(std::string_view line, std::string &shell)
         // Removes all characters from string that are not a number or a digit.
         for (char const &c: line)
         {
-            if (isdigit(c) || isalpha(c))
+            if (isalnum(c) || c == '@' || c == ':' || c == '.')
             {
                 shell += c;
-            }
-            else
-            {
-
             }
         }
     };
@@ -34,7 +30,10 @@ void logic::remove_special_characters(std::string_view line, std::string &shell)
 void logic::emails_to_username(std::string_view line, std::string &shell)
 {
     if (!helper_functions::is_email(line))
-    { return; }
+    {
+        shell += line;
+        return;
+    }
 
     auto edit = [&]
     {
@@ -54,6 +53,7 @@ void logic::usernames_to_email(std::string_view line, std::string_view domain, s
 {
     if (helper_functions::is_email(line))
     {
+        shell += line;
         return;
     }
     auto edit = [&]
@@ -71,7 +71,7 @@ void logic::usernames_to_email(std::string_view line, std::string_view domain, s
 
 void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
 {
-    shell = line;
+    shell += line;
     shell += append;
 }
 
@@ -138,13 +138,13 @@ void logic::swap_pass_case_first_letter(std::string_view line, std::string &shel
 
         if (islower(line[colon_index + 1]))
         {
-            shell += line.substr(0, colon_index);
+            shell += line.substr(0, colon_index + 1);
             shell += std::toupper(line[colon_index + 1]);
             shell += line.substr(colon_index + 2);
         }
         else
         {
-            shell += line.substr(0, colon_index);
+            shell += line.substr(0, colon_index + 1);
             shell += std::tolower((line[colon_index + 1]));
             shell += line.substr(colon_index + 2);
         }
@@ -157,18 +157,19 @@ void logic::swap_pass_numbers_to_user(std::string_view line, std::string &shell)
 {
     auto edit = [&]
     {
+        if (!helper_functions::has_numbers(line))
+        {
+            shell = line;
+            return;
+        }
+
         const size_t colon = line.find_first_of(':');
 
         const auto password = line.substr(0, colon + 1);
 
         std::string password_numbers;
-        password_numbers.reserve(line.length());
-
         helper_functions::get_numbers(password, password_numbers);
-
         std::string password_letters;
-        password_letters.reserve(line.length());
-
         helper_functions::get_letters(password, password_letters);
 
         if (helper_functions::is_email(line))
@@ -188,36 +189,38 @@ void logic::swap_pass_numbers_to_user(std::string_view line, std::string &shell)
         }
     };
 
-    helper_functions::has_numbers(line) && helper_functions::check_correct_format(line) ? edit() : void();
+    helper_functions::check_correct_format(line) ? edit() : void();
 }
 
 void logic::swap_user_numbers_to_pass(std::string_view line, std::string &shell)
 {
-
     auto edit = [&]
     {
+        if (!helper_functions::has_numbers(line))
+        {
+            shell = line;
+            return;
+        }
         const size_t colon = line.find_first_of(':');
 
         const auto username = line.substr(0, colon);
 
         std::string user_numbers;
-        user_numbers.reserve(line.length());
-
         std::string user_letters;
-        user_letters.reserve(line.length());
 
         helper_functions::get_numbers(username, user_numbers);
         helper_functions::get_letters(username, user_letters);
+
         shell += user_letters;
         shell += ':';
         shell += line.substr(colon + 1);
         shell += user_numbers;
     };
 
-    helper_functions::has_numbers(line) && helper_functions::check_correct_format(line) ? edit() : void();
+     helper_functions::check_correct_format(line) ? edit() : void();
 }
 
-void logic::extract_x_from_pass(std::string_view line, int length, std::string& shell)
+void logic::extract_x_from_pass(std::string_view line, int length, std::string &shell)
 {
     auto edit = [&]
     {
@@ -252,8 +255,7 @@ void logic::swap_numbers(std::string_view line, std::string &shell)
 
             shell += line.substr(0, mail_index);
             shell += password_numbers;
-            shell += line.substr(mail_index, colon_index);
-            shell += ':';
+            shell += line.substr(mail_index, colon_index + 1);
             shell += password_letters;
             shell += username_numbers;
         }
@@ -323,7 +325,7 @@ void logic::delete_duplicates(const std::string &file_path)
         system("pause");
         return;
     }
-    std::cout << "Error opening files for reading or writing, there is a problem with your file paths." << std::endl;
+    std::cout << "Error opening files for reading or writing, there is a problem with your file paths." << '\n';
     file_write.close();
     file_read.close();
 }

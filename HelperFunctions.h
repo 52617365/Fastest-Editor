@@ -6,7 +6,6 @@
 #define EDITOR_C___HELPERFUNCTIONS_H
 
 #include <string>
-#include <fstream>
 #include <algorithm>
 
 class helper_functions
