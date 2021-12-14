@@ -4,43 +4,42 @@
 
 #ifndef EDITOR_C___LOGIC_H
 #define EDITOR_C___LOGIC_H
+
 #include <string>
 
 class logic
 {
     logic() = default;
+
 public:
 
-    ~logic() = default
-    ;
+    ~logic() = default;
 
-    static void remove_special_characters(std::string
-                                          & line
-    );
+    static void remove_special_characters(std::string_view line, std::string &shell);
 
-    static void emails_to_username(std::string &line);
+    static void emails_to_username(std::string_view line, std::string &shell);
 
-    static void usernames_to_email(std::string& line, const char* domain);
+    static void usernames_to_email(std::string_view line, const char *domain, std::string &shell);
 
-    static void append_to_end(std::string& line, const char* append);
+    static void append_to_end(std::string_view line, const char *append, std::string& shell);
 
-    static void append_to_username(std::string& line, const char* append);
+    static void append_to_username(std::string_view line, const char *append, std::string& shell);
 
-    static void to_lower_case(std::string &line);
+    static void to_lower_case(std::string_view line, std::string &shell);
 
-    static void to_upper_case(std::string &line);
+    static void to_upper_case(std::string_view line, std::string &shell);
 
-    static void swap_pass_case_first_letter(std::string &line);
+    static void swap_pass_case_first_letter(std::string_view line, std::string &shell);
 
-    static void swap_pass_numbers_to_user(std::string &line);
+    static void swap_pass_numbers_to_user(std::string_view line, std::string &shell);
 
-    static void swap_user_numbers_to_pass(std::string& line);
+    static void swap_user_numbers_to_pass(std::string_view line, std::string &shell);
 
-    static void extract_x_from_pass(std::string &line, const int length);
+    static void extract_x_from_pass(std::string_view line, int length, std::string& shell);
 
-    static void swap_numbers(std::string &line);
+    static void swap_numbers(std::string_view line, std::string &shell);
 
-    static void delete_duplicates(const std::string& file_path);
+    static void delete_duplicates(const std::string &file_path);
 };
 
 

@@ -2,6 +2,8 @@
 #include "Initialize.h"
 #include <cstdlib>
 #include "ModeEnum.h"
+#include "HelperFunctions.h"
+#include <limits>
 
 void ascii_art();
 
@@ -23,7 +25,7 @@ int main()
     display_modes();
     choose_mode(mode, length, append);
     initialize::read_and_write_file(mode, length, append.c_str());
-    return 1;
+    return 0;
 }
 
 void ascii_art()
@@ -77,30 +79,36 @@ void display_modes()
 
 void choose_mode(int& mode, int& length, std::string& append)
 {
-    int mode_shell;
-    std::cin >> mode_shell;
-
-    if (mode_shell == APPEND_TO_END || mode_shell == APPEND_TO_USERNAME)
+    while((std::cout << "Enter mode:\n") && (!(std::cin >> mode) || mode < 1 || mode > 13))
     {
-        mode = mode_shell;
+        std::cout << "That's not a valid mode.";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    if (mode == APPEND_TO_END || mode == APPEND_TO_USERNAME)
+    {
+        mode = mode;
         std::cout << "What to append:\n";
         std::cin >> append;
     }
-    else if (mode_shell == EXTRACT_X_FROM_PASS)
+    else if (mode == EXTRACT_X_FROM_PASS)
     {
-        mode = mode_shell;
-        std::cout << "Extract Length:\n";
-        std::cin >> length;
-    }
-    else if (mode_shell == USERNAMES_TO_EMAIL)
-    {
-        mode = mode_shell;
-        std::cout << "Enter domain e.g @example.com:\n";
-        std::cin >> append;
-    }
-    else
-    {
-        mode = mode_shell;
+        mode = mode;
+        while(!std::isdigit(length))
+        {
+            std::cout << "Extract Length:\n";;
+            std::cin >> length;
+        }
     }
 
+    else if (mode == USERNAMES_TO_EMAIL)
+    {
+        mode = mode;
+        while (!append.contains('@') && !append.contains('.'))
+        {
+            std::cout << "Enter domain e.g @example.com:\n";
+            std::cin >> append;
+        }
+    }
 }

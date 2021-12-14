@@ -10,6 +10,7 @@
 #include "Logic.h"
 #include <chrono> // Stopwatch
 #include "ModeEnum.h"
+#include <memory>
 
 void initialize::ask_file_path(std::string& file_path)
 {
@@ -25,7 +26,6 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
     {
         std::string file_path;
         ask_file_path(file_path);
-        const char *file_path_const = file_path.c_str();
 
         std::string mode_name;
         init_mode_name(mode, mode_name);
@@ -64,7 +64,7 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
 
             for (auto &e: load_file)
             {
-                init_mode_func(mode, e, length, append, file_path_const);
+                init_mode_func(mode, e, length, append);
                 file_write << e << '\n';
             }
             const auto finish_timer = std::chrono::high_resolution_clock::now();
@@ -82,8 +82,7 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
         file_read.close();
         file_write.close();
     }
-    else
-    {
+    else {
         std::string file_path;
         ask_file_path(file_path);
         std::erase(file_path, '"');
@@ -111,12 +110,11 @@ void initialize::init_mode_name(const int mode, std::string& mode_name)
         case SWAP_USER_NUMBER_TO_PASS: mode_name = "swap_user_numbers_to_pass"; break;
         case EXTRACT_X_FROM_PASS: mode_name = "extract_x_from_pass"; break;
         case SWAP_NUMBERS: mode_name = "swap_numbers"; break;
-        case DELETE_DUPLICATES: mode_name = "delete_duplicates"; break;
         default: break;
     }
 }
 
-void initialize::init_mode_func(const int mode, std::string& line, const int length, const char* append, const char* file_path)
+void initialize::init_mode_func(const int mode, std::string& line, const int length, const char* append)
 {
     switch (mode)
     {
@@ -132,7 +130,6 @@ void initialize::init_mode_func(const int mode, std::string& line, const int len
         case APPEND_TO_END: logic::append_to_end(line, append); break;
         case APPEND_TO_USERNAME: logic::append_to_username(line, append); break;
         case EXTRACT_X_FROM_PASS: logic::extract_x_from_pass(line, length); break;
-        case DELETE_DUPLICATES: logic::delete_duplicates(file_path); break;
         default: break;
     }
 }

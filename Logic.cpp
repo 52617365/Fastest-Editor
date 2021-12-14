@@ -7,31 +7,27 @@
 #include <chrono>
 #include <iostream>
 #include "HelperFunctions.h"
+#include <memory>
 
 
-
-void logic::remove_special_characters(std::string &line)
+void logic::remove_special_characters(std::string_view line, std::string &shell)
 {
     auto edit = [&]
     {
-        int current = 0;
-
         // Removes all characters from string that are not a number or a digit.
-        for (char const &c : line)
+        for (char const &c: line)
         {
-            if (!isdigit(c) || !isalpha(c))
+            if (isdigit(c) || isalpha(c))
             {
-                line[current] = c;
-                current++;
+                shell += c;
             }
         }
-        line = std::string_view(line.c_str(), current);
     };
 
     helper_functions::check_correct_format(line) ? edit() : void();
 }
 
-void logic::emails_to_username(std::string &line)
+void logic::emails_to_username(std::string_view line, std::string &shell)
 {
     if (!helper_functions::is_email(line))
     { return; }
@@ -41,11 +37,8 @@ void logic::emails_to_username(std::string &line)
         const size_t colon = line.find_first_of(':');
         if (const size_t mail = line.find_first_of('@'); mail < colon)
         {
-            const std::string_view first_string(line.c_str(), mail);
-            const std::string_view second_string(line.c_str() + colon);
-
-            line = first_string;
-            line += second_string;
+            shell += line.substr(0, mail);
+            shell += line.substr(colon);
         }
     };
 
@@ -53,7 +46,7 @@ void logic::emails_to_username(std::string &line)
 }
 
 
-void logic::usernames_to_email(std::string &line, const char* domain)
+void logic::usernames_to_email(std::string_view line, const char *domain, std::string &shell)
 {
     if (helper_functions::is_email(line))
     {
@@ -61,83 +54,109 @@ void logic::usernames_to_email(std::string &line, const char* domain)
     }
     else
     {
-
         auto edit = [&]
         {
             const size_t colon = line.find_first_of(':');
 
-            line = std::string_view(line.c_str(), colon);
-            line += domain;
-            line += std::string_view(line.c_str() + colon);
+            shell += line.substr(0, colon);
+            shell += domain;
+            shell += line.substr(colon);
         };
 
         helper_functions::check_correct_format(line) ? edit() : void();
     }
 }
 
-void logic::append_to_end(std::string &line, const char* append)
+void logic::append_to_end(std::string_view line, const char *append, std::string &shell)
 {
-    line += append;
+    shell += line;
+    shell += append;
 }
 
 
-void logic::append_to_username(std::string &line, const char* append)
+void logic::append_to_username(std::string_view line, const char *append, std::string &shell)
 {
 
     auto email = [&]
     {
         const size_t mail_index = line.find_first_of('@');
-        line = std::string_view(line.c_str(), mail_index);
-        line += append;
-        line += std::string_view(line.c_str() + mail_index);
+
+        shell += line.substr(0, mail_index);
+        shell += append;
+        shell += line.substr(mail_index);
     };
 
     auto username = [&]
     {
         const size_t colon_index = line.find_first_of(':');
-        line = std::string_view(line.c_str(), colon_index);
-        line += append;
-        line += std::string_view(line.c_str() + colon_index);
+
+        shell += line.substr(0, colon_index);
+        shell += append;
+        shell += line.substr(colon_index);
     };
 
     helper_functions::is_email(line) ? email() : username();
-
 }
 
-void logic::to_lower_case(std::string &line)
+void logic::to_lower_case(std::string_view line, std::string &shell)
 {
-    std::ranges::transform(line, line.begin(), ::tolower);
-}
-
-void logic::to_upper_case(std::string &line)
-{
-    std::ranges::transform(line, line.begin(), ::toupper);
-}
-
-void logic::swap_pass_case_first_letter(std::string &line)
-{
-    auto edit = [&]
+    for (const char &c: line)
     {
-        if (const size_t colon_index = line.find_first_of(':'); isupper(line[colon_index + 1]))
+        if (std::islower(c))
         {
-            line[colon_index + 1] = tolower(line[colon_index + 1]);
+            shell += c;
         }
         else
         {
-            line[colon_index + 1] = toupper(line[colon_index + 1]);
+            shell += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+        }
+    }
+}
+
+void logic::to_upper_case(std::string_view line, std::string &shell)
+{
+    for (const char &c: line)
+    {
+        if (std::islower(c))
+        {
+            shell += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+        }
+        else
+        {
+            shell += c;
+        }
+    }
+}
+
+void logic::swap_pass_case_first_letter(std::string_view line, std::string &shell)
+{
+    auto edit = [&]
+    {
+        auto colon_index = line.find_first_of(':');
+        if (isupper(line[colon_index + 1]))
+        {
+            shell += line.substr(0, colon_index);
+            shell += tolower(line[colon_index + 1]);
+            shell += line.substr(colon_index + 2);
+        }
+        else
+        {
+            shell += line.substr(0, colon_index);
+            shell += toupper(line[colon_index + 1]);
+            shell += line.substr(colon_index + 2);
         }
     };
 
     helper_functions::check_correct_format(line) ? edit() : void();
 }
 
-void logic::swap_pass_numbers_to_user(std::string &line)
+void logic::swap_pass_numbers_to_user(std::string_view line, std::string &shell)
 {
     auto edit = [&]
     {
         const size_t colon = line.find_first_of(':');
 
-        const auto password = std::string_view (line.c_str() + colon + 1);
+        const auto password = line.substr(0, colon + 1);
 
         std::string password_numbers;
         std::string password_letters;
@@ -164,17 +183,18 @@ void logic::swap_pass_numbers_to_user(std::string &line)
     helper_functions::has_numbers(line) && helper_functions::check_correct_format(line) ? edit() : void();
 }
 
-void logic::swap_user_numbers_to_pass(std::string &line)
+void logic::swap_user_numbers_to_pass(std::string_view line, std::string &shell)
 {
 
     auto edit = [&]
     {
         const size_t colon = line.find_first_of(':');
 
-        const auto username = std::string_view(line.c_str(), colon);
+        const auto username = line.substr(0, colon);
 
         std::string user_numbers;
         std::string user_letters;
+
         helper_functions::get_numbers(username, user_numbers);
         helper_functions::get_letters(username, user_letters);
         line = user_letters;
@@ -239,7 +259,7 @@ void logic::swap_numbers(std::string &line)
     helper_functions::check_correct_format(line) ? edit() : void();
 }
 
-void logic::delete_duplicates(const std::string& file_path)
+void logic::delete_duplicates(const std::string &file_path)
 {
     std::fstream file_read;
     std::fstream file_write;
@@ -281,12 +301,14 @@ void logic::delete_duplicates(const std::string& file_path)
         load_file.erase(std::ranges::unique(load_file).begin(), load_file.end());
 
         // Duplicates deleted, now write them all to a file.
-        for (const auto& e : load_file) file_write << e;
+        for (const auto &e: load_file)
+        { file_write << e; }
 
         const auto finish_timer = std::chrono::high_resolution_clock::now();
         const std::chrono::duration<double> elapsed = finish_timer - start_timer;
 
-        std::cout << "Duplicates deleted, " << "execution took: " << elapsed.count() << " seconds" << ", exiting." << "\n";
+        std::cout << "Duplicates deleted, " << "execution took: " << elapsed.count() << " seconds" << ", exiting."
+                  << "\n";
         system("pause");
         return;
     }

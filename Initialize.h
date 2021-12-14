@@ -18,7 +18,7 @@ public:
 
     static void init_mode_name(int mode, std::string& mode_name);
 
-    static void init_mode_func(int mode, std::string& line, int length, const char* append, const char* file_path);
+    static void init_mode_func(int mode, std::string& line, int length, const char* append);
 
     ~initialize();
 };
