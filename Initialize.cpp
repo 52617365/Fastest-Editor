@@ -12,17 +12,17 @@
 #include "ModeEnum.h"
 #include <memory>
 
-void initialize::ask_file_path(std::string& file_path)
+void initialize::ask_file_path(std::string &file_path)
 {
     std::cout << "Drag file into terminal: \n";
     std::cin.ignore();
     std::getline(std::cin, file_path);
 }
 
-int initialize::read_and_write_file(int mode, int length, const char* append)
+int initialize::read_and_write_file(int mode, int length, std::string_view append)
 {
 
-    if(mode != DELETE_DUPLICATES)
+    if (mode != DELETE_DUPLICATES)
     {
         std::string file_path;
         ask_file_path(file_path);
@@ -64,8 +64,10 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
 
             for (auto &e: load_file)
             {
-                init_mode_func(mode, e, length, append);
-                file_write << e << '\n';
+                std::string shell;
+                shell.reserve(e.length() + append.length());
+                init_mode_func(mode, e, length, append, shell);
+                file_write << shell << '\n';
             }
             const auto finish_timer = std::chrono::high_resolution_clock::now();
             const std::chrono::duration<double> elapsed = finish_timer - start_timer;
@@ -82,7 +84,8 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
         file_read.close();
         file_write.close();
     }
-    else {
+    else
+    {
         std::string file_path;
         ask_file_path(file_path);
         std::erase(file_path, '"');
@@ -92,48 +95,97 @@ int initialize::read_and_write_file(int mode, int length, const char* append)
 }
 
 
-
-
-void initialize::init_mode_name(const int mode, std::string& mode_name)
+void initialize::init_mode_name(const int mode, std::string &mode_name)
 {
     switch (mode)
     {
-        case REMOVE_SPECIAL_CHARACTERS: mode_name = "remove_special_characters"; break;
-        case EMAILS_TO_USERNAME: mode_name = "emails_to_username"; break;
-        case USERNAMES_TO_EMAIL: mode_name = "usernames_to_email"; break;
-        case APPEND_TO_END: mode_name = "append_to_end"; break;
-        case APPEND_TO_USERNAME: mode_name = "append_to_username"; break;
-        case TO_LOWER_CASE: mode_name = "to_lower_case"; break;
-        case TO_UPPER_CASE: mode_name = "to_upper_case"; break;
-        case SWAP_PASS_CASE_FIRST_LETTER: mode_name = "swap_pass_case_first_letter"; break;
-        case SWAP_PASS_NUMBERS_TO_USER: mode_name = "swap_pass_numbers_to_user"; break;
-        case SWAP_USER_NUMBER_TO_PASS: mode_name = "swap_user_numbers_to_pass"; break;
-        case EXTRACT_X_FROM_PASS: mode_name = "extract_x_from_pass"; break;
-        case SWAP_NUMBERS: mode_name = "swap_numbers"; break;
-        default: break;
+        case REMOVE_SPECIAL_CHARACTERS:
+            mode_name = "remove_special_characters";
+            break;
+        case EMAILS_TO_USERNAME:
+            mode_name = "emails_to_username";
+            break;
+        case USERNAMES_TO_EMAIL:
+            mode_name = "usernames_to_email";
+            break;
+        case APPEND_TO_END:
+            mode_name = "append_to_end";
+            break;
+        case APPEND_TO_USERNAME:
+            mode_name = "append_to_username";
+            break;
+        case TO_LOWER_CASE:
+            mode_name = "to_lower_case";
+            break;
+        case TO_UPPER_CASE:
+            mode_name = "to_upper_case";
+            break;
+        case SWAP_PASS_CASE_FIRST_LETTER:
+            mode_name = "swap_pass_case_first_letter";
+            break;
+        case SWAP_PASS_NUMBERS_TO_USER:
+            mode_name = "swap_pass_numbers_to_user";
+            break;
+        case SWAP_USER_NUMBER_TO_PASS:
+            mode_name = "swap_user_numbers_to_pass";
+            break;
+        case EXTRACT_X_FROM_PASS:
+            mode_name = "extract_x_from_pass";
+            break;
+        case SWAP_NUMBERS:
+            mode_name = "swap_numbers";
+            break;
+        default:
+            break;
     }
 }
 
-void initialize::init_mode_func(const int mode, std::string& line, const int length, const char* append)
+void
+initialize::init_mode_func(const int mode, std::string_view line, const int length, std::string_view append,
+                           std::string &shell)
 {
     switch (mode)
     {
-        case REMOVE_SPECIAL_CHARACTERS: logic::remove_special_characters(line); break;
-        case EMAILS_TO_USERNAME: logic::emails_to_username(line); break;
-        case TO_LOWER_CASE: logic::to_lower_case(line); break;
-        case TO_UPPER_CASE: logic::to_upper_case(line); break;
-        case SWAP_PASS_CASE_FIRST_LETTER: logic::swap_pass_case_first_letter(line); break;
-        case SWAP_PASS_NUMBERS_TO_USER: logic::swap_pass_numbers_to_user(line); break;
-        case SWAP_USER_NUMBER_TO_PASS: logic::swap_user_numbers_to_pass(line); break;
-        case SWAP_NUMBERS: logic::swap_numbers(line); break;
-        case USERNAMES_TO_EMAIL: logic::usernames_to_email(line, append); break;
-        case APPEND_TO_END: logic::append_to_end(line, append); break;
-        case APPEND_TO_USERNAME: logic::append_to_username(line, append); break;
-        case EXTRACT_X_FROM_PASS: logic::extract_x_from_pass(line, length); break;
-        default: break;
+        case REMOVE_SPECIAL_CHARACTERS:
+            logic::remove_special_characters(line, shell);
+            break;
+        case EMAILS_TO_USERNAME:
+            logic::emails_to_username(line, shell);
+            break;
+        case TO_LOWER_CASE:
+            logic::to_lower_case(line, shell);
+            break;
+        case TO_UPPER_CASE:
+            logic::to_upper_case(line, shell);
+            break;
+        case SWAP_PASS_CASE_FIRST_LETTER:
+            logic::swap_pass_case_first_letter(line, shell);
+            break;
+        case SWAP_PASS_NUMBERS_TO_USER:
+            logic::swap_pass_numbers_to_user(line, shell);
+            break;
+        case SWAP_USER_NUMBER_TO_PASS:
+            logic::swap_user_numbers_to_pass(line, shell);
+            break;
+        case SWAP_NUMBERS:
+            logic::swap_numbers(line, shell);
+            break;
+        case USERNAMES_TO_EMAIL:
+            logic::usernames_to_email(line, append, shell);
+            break;
+        case APPEND_TO_END:
+            logic::append_to_end(line, append, shell);
+            break;
+        case APPEND_TO_USERNAME:
+            logic::append_to_username(line, append, shell);
+            break;
+        case EXTRACT_X_FROM_PASS:
+            logic::extract_x_from_pass(line, length, shell);
+            break;
+        default:
+            break;
     }
 }
-
 
 
 initialize::~initialize() = default;

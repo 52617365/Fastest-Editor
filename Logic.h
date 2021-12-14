@@ -19,11 +19,11 @@ public:
 
     static void emails_to_username(std::string_view line, std::string &shell);
 
-    static void usernames_to_email(std::string_view line, const char *domain, std::string &shell);
+    static void usernames_to_email(std::string_view line, std::string_view domain, std::string &shell);
 
-    static void append_to_end(std::string_view line, const char *append, std::string& shell);
+    static void append_to_end(std::string_view line, std::string_view append, std::string& shell);
 
-    static void append_to_username(std::string_view line, const char *append, std::string& shell);
+    static void append_to_username(std::string_view line, std::string_view append, std::string& shell);
 
     static void to_lower_case(std::string_view line, std::string &shell);
 
