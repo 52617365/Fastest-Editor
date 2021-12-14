@@ -2,8 +2,6 @@
 // Created by forac on 05/12/2021.
 //
 
-#ifndef EDITOR_C___INITIALIZE_H
-#define EDITOR_C___INITIALIZE_H
 
 #include <string>
 
@@ -23,5 +21,3 @@ public:
     ~initialize();
 };
 
-
-#endif //EDITOR_C___INITIALIZE_H

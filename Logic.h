@@ -2,8 +2,6 @@
 // Created by forac on 03/12/2021.
 //
 
-#ifndef EDITOR_C___LOGIC_H
-#define EDITOR_C___LOGIC_H
 
 #include <string>
 
@@ -42,5 +40,3 @@ public:
     static void delete_duplicates(const std::string &file_path);
 };
 
-
-#endif //EDITOR_C___LOGIC_H

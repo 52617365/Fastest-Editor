@@ -21,7 +21,6 @@ void initialize::ask_file_path(std::string &file_path)
 
 int initialize::read_and_write_file(int mode, int length, std::string_view append)
 {
-
     if (mode != DELETE_DUPLICATES)
     {
         std::string file_path;
@@ -74,15 +73,14 @@ int initialize::read_and_write_file(int mode, int length, std::string_view appen
 
             std::cout << "File edited, " << "execution took: " << elapsed.count() << " seconds" << ", exiting." << "\n";
             system("pause");
+            return 0;
         }
         else
         {
             std::cout << "Error opening files for reading or writing, there is a problem with your file paths."
                       << std::endl;
-            return {};
+            return 1;
         }
-        file_read.close();
-        file_write.close();
     }
     else
     {
@@ -140,8 +138,7 @@ void initialize::init_mode_name(const int mode, std::string &mode_name)
     }
 }
 
-void
-initialize::init_mode_func(const int mode, std::string_view line, const int length, std::string_view append,
+void initialize::init_mode_func(const int mode, std::string_view line, const int length, std::string_view append,
                            std::string &shell)
 {
     switch (mode)

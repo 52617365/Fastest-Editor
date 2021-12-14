@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Initialize.h"
-#include <cstdlib>
 #include "ModeEnum.h"
 #include "HelperFunctions.h"
 #include <limits>
@@ -11,7 +10,7 @@ void program_name();
 
 void display_modes();
 
-void choose_mode(int& mode, int& length, std::string& append);
+void choose_mode(int &mode, int &length, std::string &append);
 
 int main()
 {
@@ -77,9 +76,9 @@ void display_modes()
     std::cout << "#####################################################################" << std::endl;
 }
 
-void choose_mode(int& mode, int& length, std::string& append)
+void choose_mode(int &mode, int &length, std::string &append)
 {
-    while((std::cout << "Enter mode:\n") && (!(std::cin >> mode) || mode < 1 || mode > 13))
+    while ((std::cout << "Enter mode:\n") && (!(std::cin >> mode) || mode < 1 || mode > 13))
     {
         std::cout << "That's not a valid mode.";
         std::cin.clear();
@@ -88,23 +87,26 @@ void choose_mode(int& mode, int& length, std::string& append)
 
     if (mode == APPEND_TO_END || mode == APPEND_TO_USERNAME)
     {
-        mode = mode;
         std::cout << "What to append:\n";
         std::cin >> append;
     }
     else if (mode == EXTRACT_X_FROM_PASS)
     {
-        mode = mode;
-        while(!std::isdigit(length))
+
+        std::cout << "Enter length\n";
+        std::cin >> length;
+        while (std::cin.fail())
         {
-            std::cout << "Extract Length:\n";;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Enter length\n";
             std::cin >> length;
+
         }
     }
 
     else if (mode == USERNAMES_TO_EMAIL)
     {
-        mode = mode;
         while (!append.contains('@') && !append.contains('.'))
         {
             std::cout << "Enter domain e.g @example.com:\n";

@@ -21,6 +21,10 @@ void logic::remove_special_characters(std::string_view line, std::string &shell)
             {
                 shell += c;
             }
+            else
+            {
+
+            }
         }
     };
 
@@ -52,24 +56,22 @@ void logic::usernames_to_email(std::string_view line, std::string_view domain, s
     {
         return;
     }
-    else
+    auto edit = [&]
     {
-        auto edit = [&]
-        {
-            const size_t colon = line.find_first_of(':');
+        const size_t colon = line.find_first_of(':');
 
-            shell += line.substr(0, colon);
-            shell += domain;
-            shell += line.substr(colon);
-        };
+        shell += line.substr(0, colon);
+        shell += domain;
+        shell += line.substr(colon);
+    };
 
-        helper_functions::check_correct_format(line) ? edit() : void();
-    }
+    helper_functions::check_correct_format(line) ? edit() : void();
+
 }
 
 void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
 {
-    shell += line;
+    shell = line;
     shell += append;
 }
 
@@ -108,7 +110,7 @@ void logic::to_lower_case(std::string_view line, std::string &shell)
         }
         else
         {
-            shell += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+            shell += std::tolower((c));
         }
     }
 }
@@ -119,7 +121,7 @@ void logic::to_upper_case(std::string_view line, std::string &shell)
     {
         if (std::islower(c))
         {
-            shell += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+            shell += std::toupper((c));
         }
         else
         {
@@ -134,16 +136,16 @@ void logic::swap_pass_case_first_letter(std::string_view line, std::string &shel
     {
         auto colon_index = line.find_first_of(':');
 
-        if (isupper(line[colon_index + 1]))
+        if (islower(line[colon_index + 1]))
         {
             shell += line.substr(0, colon_index);
-            shell += static_cast<char>(std::tolower(static_cast<unsigned char>(line[colon_index + 1])));
+            shell += std::toupper(line[colon_index + 1]);
             shell += line.substr(colon_index + 2);
         }
         else
         {
             shell += line.substr(0, colon_index);
-            shell += static_cast<char>(std::toupper(line[colon_index + 1]));
+            shell += std::tolower((line[colon_index + 1]));
             shell += line.substr(colon_index + 2);
         }
     };
@@ -160,8 +162,13 @@ void logic::swap_pass_numbers_to_user(std::string_view line, std::string &shell)
         const auto password = line.substr(0, colon + 1);
 
         std::string password_numbers;
-        std::string password_letters;
+        password_numbers.reserve(line.length());
+
         helper_functions::get_numbers(password, password_numbers);
+
+        std::string password_letters;
+        password_letters.reserve(line.length());
+
         helper_functions::get_letters(password, password_letters);
 
         if (helper_functions::is_email(line))
@@ -194,7 +201,10 @@ void logic::swap_user_numbers_to_pass(std::string_view line, std::string &shell)
         const auto username = line.substr(0, colon);
 
         std::string user_numbers;
+        user_numbers.reserve(line.length());
+
         std::string user_letters;
+        user_letters.reserve(line.length());
 
         helper_functions::get_numbers(username, user_numbers);
         helper_functions::get_letters(username, user_letters);
@@ -231,7 +241,6 @@ void logic::swap_numbers(std::string_view line, std::string &shell)
         std::string username_numbers;
         std::string password_letters;
         std::string password_numbers;
-
         helper_functions::get_letters(username, username_letters);
         helper_functions::get_numbers(username, username_numbers);
         helper_functions::get_letters(password, password_letters);

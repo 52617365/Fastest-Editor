@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 class helper_functions
 {
@@ -24,7 +25,11 @@ public:
 
     static bool has_numbers(const std::string_view line)
     {
-        return line.find_first_not_of("0123456789") != std::string::npos;
+        std::ranges::any_of(line.begin(), line.end(), [](const char &c)
+        {
+            return isdigit(c);
+        });
+        return false;
     }
 
     static void get_numbers(const std::string_view combo, std::string &line)
@@ -35,8 +40,6 @@ public:
             {
                 line += i;
             }
-            else
-            {}
         }
     }
 
@@ -48,8 +51,6 @@ public:
             {
                 line += i;
             }
-            else
-            {}
         }
     }
 };
