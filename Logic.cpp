@@ -300,7 +300,7 @@ void logic::delete_duplicates(const std::string &file_path)
         std::ranges::sort(load_file);
 
         // Lines are sorted now, time to delete duplicates.
-        load_file.erase(std::ranges::unique(load_file).begin(), load_file.end());
+        load_file.erase(std::unique(load_file.begin(), load_file.end()), load_file.end());
 
         // Duplicates deleted, now write them all to a file.
         for (const auto &e: load_file)
