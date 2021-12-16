@@ -3,4 +3,4 @@ project(Editor)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
-add_executable(Editor main.cpp HelperFunctions.h ModeEnum.h Logic.cpp Logic.h Initialize.cpp Initialize.h)
+add_executable(Editor main.cpp HelperFunctions.h HelperFunctions.cpp ModeEnum.h Logic.cpp Logic.h Initialize.cpp Initialize.h Modes.h UserInputs.cpp UserInputs.h HandleMode.cpp HandleMode.h)

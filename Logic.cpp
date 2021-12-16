@@ -2,12 +2,14 @@
 // Created by forac on 03/12/2021.
 //
 
-#include "Logic.h"
+
 #include <algorithm>
 #include <chrono>
-#include <iostream>
 #include "HelperFunctions.h"
 #include <memory>
+#include <fstream>
+#include <iostream>
+#include "Logic.h"
 
 
 void logic::remove_special_characters(std::string_view line, std::string &shell)
@@ -69,7 +71,7 @@ void logic::usernames_to_email(std::string_view line, std::string_view domain, s
 
 }
 
-void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
+inline void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
 {
     shell += line;
     shell += append;
@@ -217,7 +219,7 @@ void logic::swap_user_numbers_to_pass(std::string_view line, std::string &shell)
         shell += user_numbers;
     };
 
-     helper_functions::check_correct_format(line) ? edit() : void();
+    helper_functions::check_correct_format(line) ? edit() : void();
 }
 
 void logic::extract_x_from_pass(std::string_view line, int length, std::string &shell)

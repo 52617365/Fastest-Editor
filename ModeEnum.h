@@ -1,5 +1,5 @@
 #pragma once
-enum modes
+enum mode_names
 {
     REMOVE_SPECIAL_CHARACTERS = 1,
     EMAILS_TO_USERNAME,

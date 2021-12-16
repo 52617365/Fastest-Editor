@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Initialize.h"
 #include "ModeEnum.h"
-#include "HelperFunctions.h"
 #include <limits>
 
 void ascii_art();
@@ -100,7 +99,6 @@ void choose_mode(int &mode, int &length, std::string &append)
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Enter length\n";
             std::cin >> length;
-
         }
     }
 
