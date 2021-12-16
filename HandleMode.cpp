@@ -215,6 +215,16 @@ std::string HandleMode::init_mode_name(const int mode)
 void HandleMode::handle_writing(auto &func, std::fstream &read,
                                 std::fstream &write)
 {
+
+    std::string shell;
     logic l;
+
+    while (read >> shell)
+    {
+        std::string edit;
+        func(shell, edit);
+        write << edit << '\n';
+    }
+
     func(l);
 }
