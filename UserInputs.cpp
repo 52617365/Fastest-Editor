@@ -14,16 +14,14 @@ int UserInputs::input_and_validate_mode()
   }
   return mode;
 }
+
 std::string UserInputs::input_file_path()
 {
   std::string file_path;
 
   std::cin.ignore();
 
-  while(((std::cout << "Drag file into terminal: \n") && std::getline(std::cin, file_path)) && std::empty(file_path))
-  {
-    std::cout << "Empty.";
-  }
+  while(((std::cout << "Drag file into terminal: \n") && std::getline(std::cin, file_path)) && std::empty(file_path)) {}
   std::erase(file_path, '"');
   return file_path;
 }

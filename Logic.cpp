@@ -1,8 +1,3 @@
-//
-// Created by forac on 03/12/2021.
-//
-
-
 #include <algorithm>
 #include <chrono>
 #include "HelperFunctions.h"
@@ -10,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include "Logic.h"
-
 
 void logic::remove_special_characters(std::string_view line, std::string &shell)
 {
@@ -71,7 +65,7 @@ void logic::usernames_to_email(std::string_view line, std::string_view domain, s
 
 }
 
-inline void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
+void logic::append_to_end(std::string_view line, std::string_view append, std::string &shell)
 {
     shell += line;
     shell += append;

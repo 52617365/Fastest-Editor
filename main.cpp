@@ -1,7 +1,5 @@
 #include <iostream>
-#include "Initialize.h"
-#include "ModeEnum.h"
-#include <limits>
+#include "HandleMode.h"
 
 void ascii_art();
 
@@ -9,20 +7,14 @@ void program_name();
 
 void display_modes();
 
-void choose_mode(int &mode, int &length, std::string &append);
-
 int main()
 {
     ascii_art();
     program_name();
-
-    int mode;
-    int length;
-    std::string append;
-
     display_modes();
-    choose_mode(mode, length, append);
-    initialize::read_and_write_file(mode, length, append.c_str());
+
+    HandleMode::init_mode();
+
     return 0;
 }
 
@@ -73,41 +65,4 @@ void display_modes()
     std::cout << "12. swap_numbers" << '\n';
     std::cout << "13. delete_duplicates" << '\n';
     std::cout << "#####################################################################" << '\n';
-}
-
-void choose_mode(int &mode, int &length, std::string &append)
-{
-    while ((std::cout << "Enter mode:\n") && (!(std::cin >> mode) || mode < 1 || mode > 13))
-    {
-        std::cout << "That's not a valid mode.";
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    if (mode == APPEND_TO_END || mode == APPEND_TO_USERNAME)
-    {
-        std::cout << "What to append:\n";
-        std::cin >> append;
-    }
-    else if (mode == EXTRACT_X_FROM_PASS)
-    {
-        std::cout << "Enter length\n";
-        std::cin >> length;
-        while (std::cin.fail())
-        {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Enter length\n";
-            std::cin >> length;
-        }
-    }
-
-    else if (mode == USERNAMES_TO_EMAIL)
-    {
-        while (!append.contains('@') && !append.contains('.'))
-        {
-            std::cout << "Enter domain e.g @example.com:\n";
-            std::cin >> append;
-        }
-    }
 }

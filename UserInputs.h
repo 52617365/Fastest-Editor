@@ -5,7 +5,7 @@
 #ifndef EDITOR_USERINPUTS_H
 #define EDITOR_USERINPUTS_H
 
-#include "Modes.h"
+#include <string>
 
 class UserInputs
 {

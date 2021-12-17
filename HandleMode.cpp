@@ -12,17 +12,15 @@
 #include <iostream>
 #include <limits>
 
-// Extract x length from password.
 void HandleMode::init_mode()
 {
     int mode = UserInputs::input_and_validate_mode();
-    std::fstream read(UserInputs::input_file_path(), std::ios::in);
+    std::string file_path = UserInputs::input_file_path();
+    std::fstream read(file_path, std::ios::in);
     std::fstream write(init_mode_name(mode) + ".txt", std::ios::app);
 
     if (read.is_open() && write.is_open())
     {
-        std::cout << "Editing has been started.\n";
-        const auto start_timer = std::chrono::high_resolution_clock::now();
         std::string shell;
         std::string edit;
         switch (mode)
@@ -42,19 +40,19 @@ void HandleMode::init_mode()
             case USERNAMES_TO_EMAIL:
             {
                 auto func = std::mem_fn(&logic::usernames_to_email);
-                handle_writing(func, read, write);
+                handle_writing_append(func, read, write);
                 break;
             }
             case APPEND_TO_END:
             {
                 auto func = std::mem_fn(&logic::append_to_end);
-                handle_writing(func, read, write);
+                handle_writing_append(func, read, write);
                 break;
             }
             case APPEND_TO_USERNAME:
             {
                 auto func = std::mem_fn(&logic::append_to_username);
-                handle_writing(func, read, write);
+                handle_writing_append(func, read, write);
                 break;
             }
             case TO_LOWER_CASE:
@@ -90,7 +88,7 @@ void HandleMode::init_mode()
             case EXTRACT_X_FROM_PASS:
             {
                 auto func = std::mem_fn(&logic::extract_x_from_pass);
-                handle_writing(func, read, write);
+                handle_writing_length(func, read, write);
                 break;
             }
             case SWAP_NUMBERS:
@@ -101,11 +99,11 @@ void HandleMode::init_mode()
             }
             case DELETE_DUPLICATES:
             {
-                auto func = std::mem_fn(&logic::delete_duplicates);
-                handle_writing(func, read, write);
+                logic::delete_duplicates(file_path);
                 break;
             }
-            default: break;
+            default:
+                break;
         }
     }
 }
@@ -115,6 +113,7 @@ int HandleMode::get_length()
     int length = 0;
     std::cout << "Enter length\n";
     std::cin >> length;
+
 
     while (std::cin.fail())
     {
@@ -129,56 +128,11 @@ int HandleMode::get_length()
 std::string HandleMode::get_append()
 {
     std::string append;
-    while ((std::cout << "Enter append or domain:\n") && std::cin >> append &&
-           std::empty(append))
-    {
-    }
+    while ((std::cout << "Enter append or domain:\n") && std::cin >> append && std::empty(append))
+    {}
     return append;
 }
 
-/*
-// pass in the function here, make like 3 overloads ngl
-void HandleMode::handle_writing(
-        const std::function<void(std::string_view, std::string &)> &mode_func,
-        std::fstream &read, std::fstream &write)
-{
-    std::string shell;
-    while (read >> shell)
-    {
-        std::string edit;
-        mode_func(shell, edit);
-        write << edit << '\n';
-    }
-}
-
-void HandleMode::handle_writing(
-        const std::function<void(std::string_view, std::string_view, std::string &)>
-        &mode_func,
-        std::fstream &read, std::fstream &write, std::string_view append)
-{
-
-    std::string shell;
-    while (read >> shell)
-    {
-        std::string edit;
-        mode_func(shell, append, edit);
-        write << edit << '\n';
-    }
-}
-
-void HandleMode::handle_writing(
-        const std::function<void(std::string_view, int, std::string &)> &mode_func,
-        std::fstream &read, std::fstream &write, int length)
-{
-    std::string shell;
-    while (read >> shell)
-    {
-        std::string edit;
-        mode_func(shell, length, edit);
-        write << edit << '\n';
-    }
-}
-*/
 std::string HandleMode::init_mode_name(const int mode)
 {
     switch (mode)
@@ -215,16 +169,74 @@ std::string HandleMode::init_mode_name(const int mode)
 void HandleMode::handle_writing(auto &func, std::fstream &read,
                                 std::fstream &write)
 {
-
     std::string shell;
     logic l;
+
+    std::cout << "Editing has been started.\n";
+    const auto start = std::chrono::high_resolution_clock::now();
 
     while (read >> shell)
     {
         std::string edit;
-        func(shell, edit);
+        func(l, shell, edit);
         write << edit << '\n';
     }
 
-    func(l);
+    auto end = std::chrono::high_resolution_clock::now();
+    read.close();
+    write.close();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    system("pause");
+}
+
+void HandleMode::handle_writing_append(auto &func, std::fstream &read, std::fstream &write)
+{
+    std::string shell;
+    std::string append = get_append();
+
+    logic l;
+
+    std::cout << "Editing has been started.\n";
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    while (read >> shell)
+    {
+        std::string edit;
+        func(l, shell, append, edit);
+        write << edit << '\n';
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    read.close();
+    write.close();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    system("pause");
+}
+
+void HandleMode::handle_writing_length(auto &func, std::fstream &read, std::fstream &write)
+{
+    std::string shell;
+    int length = get_length();
+
+    logic l;
+
+    std::cout << "Editing has been started.\n";
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    while (read >> shell)
+    {
+        std::string edit;
+        func(l, shell, length, edit);
+        write << edit << '\n';
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    read.close();
+    write.close();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    system("pause");
 }

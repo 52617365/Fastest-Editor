@@ -1,7 +1,3 @@
-//
-// Created by forac on 04/12/2021.
-//
-
 #ifndef EDITOR_C___HELPERFUNCTIONS_H
 #define EDITOR_C___HELPERFUNCTIONS_H
 
