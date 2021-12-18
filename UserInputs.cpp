@@ -25,3 +25,27 @@ std::string UserInputs::input_file_path()
   std::erase(file_path, '"');
   return file_path;
 }
+
+std::string UserInputs::get_append()
+{
+    std::string append;
+    while ((std::cout << "Enter append or domain:\n") && std::cin >> append && std::empty(append))
+    {}
+    return append;
+}
+
+int UserInputs::get_length()
+{
+    int length = 0;
+    std::cout << "Enter length\n";
+    std::cin >> length;
+    
+    while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Enter length:\n";
+        std::cin >> length;
+    }
+    return length;
+}

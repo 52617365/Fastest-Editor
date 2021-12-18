@@ -1,68 +1,54 @@
 #include <iostream>
+#include "HandleWriting.h"
+#include "StartScreen.h"
+#include <string>
+#include "cpprest/http_client.h"
+#include "cpprest/filestream.h"
+#include "cpprest/base_uri.h"
 #include "HandleMode.h"
 
-void ascii_art();
+using namespace std;
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
+using namespace web::json;
 
-void program_name();
+using namespace utility;
 
-void display_modes();
-
-int main()
+// Verify a license key using the validate-key action
+pplx::task <http_response> validate_license_key(http_client client, const string license_key)
 {
-    ascii_art();
-    program_name();
-    display_modes();
+    http_request req;
 
+    value meta;
+    meta["key"] = value::string(license_key);
+
+    value body;
+    body["meta"] = meta;
+
+    req.headers().add("Content-Type", "application/vnd.api+json");
+    req.headers().add("Accept", "application/json");
+
+    req.set_request_uri(uri("/licenses/actions/validate-key"));
+    req.set_method(methods::POST);
+    req.set_body(body.serialize());
+
+    return client.request(req);
+}
+
+
+int main(int argc, char *argv[])
+{
+    if (argc == 1)
+    {
+        std::cerr << "[ERROR] " << "No license key argument specified" << std::endl;
+        exit(1);
+    }
+    StartScreen::PrintStartScreen();
     HandleMode::init_mode();
-
     return 0;
 }
 
-void ascii_art()
-{
-    std::cout << "#####################################################################" << '\n';
-    std::cout << "   __ _                         _              __ ____ ____ ______ " << '\n';
-    std::cout << "  / _| |                       | |            /_ |___ \\___ \\____  |" << '\n';
-    std::cout << " | |_| | ___  _ __  _ __   __ _| |__  _ __ ___ | | __) |__) |  / / " << '\n';
-    std::cout << " |  _| |/ _ \\| '_ \\| '_ \\ / _` | '_ \\| '__/ _ \\| ||__ <|__ <  / /  " << '\n';
-    std::cout << " | | | | (_) | |_) | |_) | (_| | |_) | | | (_) | |___) |__) |/ /   " << '\n';
-    std::cout << " |_| |_|\\___/| .__/| .__/ \\__,_|_.__/|_|  \\___/|_|____/____//_/    " << '\n';
-    std::cout << "             | |   | |                                             " << '\n';
-    std::cout << "             |_|   |_|                 							 " << '\n';
-}
 
-void program_name()
-{
-    std::cout << '\n';
-    std::cout << "  _____ ___ _     _____   _____ ____ ___ _____ ___  ____  " << '\n';
-    std::cout << " |  ___|_ _| |   | ____| | ____|  _ \\_ _|_   _/ _ \\|  _ \\ " << '\n';
-    std::cout << " | |_   | || |   |  _|   |  _| | | | | |  | || | | | |_) |" << '\n';
-    std::cout << " |  _|  | || |___| |___  | |___| |_| | |  | || |_| |  _ < " << '\n';
-    std::cout << " |_|   |___|_____|_____| |_____|____/___| |_| \\___/|_| \\_\\" << '\n';
-    std::cout << '\n';
-    std::cout << "#####################################################################" << '\n';
 
-    std::cout << "Press something to continue." << '\n';
-    std::cin.get();
-}
 
-void display_modes()
-{
-    system("CLS");
-    ascii_art();
-    std::cout << "#####################################################################" << '\n';
-    std::cout << "1. remove_special_characters" << '\n';
-    std::cout << "2. emails_to_username" << '\n';
-    std::cout << "3. usernames_to_email" << '\n';
-    std::cout << "4. append_to_end" << '\n';
-    std::cout << "5. append_to_username" << '\n';
-    std::cout << "6. to_lower_case" << '\n';
-    std::cout << "7. to_upper_case" << '\n';
-    std::cout << "8. swap_pass_case_first_letter" << '\n';
-    std::cout << "9. swap_pass_numbers_to_user" << '\n';
-    std::cout << "10. swap_user_numbers_to_pass" << '\n';
-    std::cout << "11. extract_x_from_pass" << '\n';
-    std::cout << "12. swap_numbers" << '\n';
-    std::cout << "13. delete_duplicates" << '\n';
-    std::cout << "#####################################################################" << '\n';
-}

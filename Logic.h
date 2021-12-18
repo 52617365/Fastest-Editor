@@ -5,12 +5,7 @@
 
 class logic
 {
-
 public:
-    logic() = default;
-
-    ~logic() = default;
-
     void remove_special_characters(std::string_view line, std::string &shell);
 
     void emails_to_username(std::string_view line, std::string &shell);

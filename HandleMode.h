@@ -1,22 +1,18 @@
 //
-// Created by xdlol on 12/16/2021.
+// Created by xdlol on 12/18/2021.
 //
 
 #ifndef EDITOR_HANDLEMODE_H
 #define EDITOR_HANDLEMODE_H
 
-#include "Logic.h"
 
-class HandleMode {
+#include <string>
+
+class HandleMode
+{
 public:
-  static void init_mode();
-  static void handle_writing(auto& func, std::fstream &read, std::fstream &write);
-  static void handle_writing_append(auto& func, std::fstream &read, std::fstream &write);
-  static void handle_writing_length(auto& func, std::fstream &read, std::fstream &write);
-
-  static std::string init_mode_name(int mode);
-  static int get_length();
-  static std::string get_append();
+    static void init_mode();
 };
 
-#endif // EDITOR_HANDLEMODE_H
+
+#endif //EDITOR_HANDLEMODE_H
