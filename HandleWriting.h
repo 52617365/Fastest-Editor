@@ -12,9 +12,9 @@
 class HandleWriting
 {
 private:
-    int mode;
+    const int mode;
 
-    std::string mode_name;
+    const std::string mode_name;
 
     void handle_writing(auto &func, std::fstream &read, std::fstream &write);
 
@@ -23,17 +23,9 @@ private:
     void handle_writing_length(auto &func, std::fstream &read, std::fstream &write);
 
 public:
-    HandleWriting(int mode, std::string mode_name) : mode {mode}, mode_name {std::move(mode_name)}
-    {}
+    HandleWriting(int mode, std::string& mode_name) : mode {mode}, mode_name {mode_name} {}
 
     void start_writing();
-
-
-
-
-
-    ~HandleWriting()
-    = default;
 };
 
 #endif // EDITOR_HANDLEWRITING_H

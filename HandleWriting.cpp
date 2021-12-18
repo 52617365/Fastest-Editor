@@ -10,7 +10,6 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
-#include <limits>
 
 void HandleWriting::start_writing()
 {
@@ -134,7 +133,7 @@ void HandleWriting::handle_writing(auto &func, std::fstream &read,
 void HandleWriting::handle_writing_append(auto &func, std::fstream &read, std::fstream &write)
 {
     std::string shell;
-    std::string append = get_append();
+    std::string append = UserInputs::get_append();
 
     logic l;
 
@@ -160,7 +159,7 @@ void HandleWriting::handle_writing_append(auto &func, std::fstream &read, std::f
 void HandleWriting::handle_writing_length(auto &func, std::fstream &read, std::fstream &write)
 {
     std::string shell;
-    int length = get_length();
+    int length = UserInputs::get_length();
 
     logic l;
 
@@ -182,7 +181,3 @@ void HandleWriting::handle_writing_length(auto &func, std::fstream &read, std::f
     system("pause");
 }
 
-HandleWriting::HandleWriting(int mode, std::string mode_name)
-{
-
-}

@@ -4,7 +4,7 @@
 
 int UserInputs::input_and_validate_mode()
 {
-  int mode = 0;
+  int mode;
   while ((std::cout << "Enter mode:\n") &&
          (!(std::cin >> mode) || mode < 1 || mode > 13))
   {
