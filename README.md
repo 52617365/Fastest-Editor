@@ -1,2 +1,2 @@
 # Fastest-Editor
-The fastest editor that is written in C++
+A file editor that has the main purpose of being fast as **** (1m edits per 0.30 seconds)
