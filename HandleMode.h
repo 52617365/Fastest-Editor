@@ -1,18 +1,14 @@
-//
-// Created by xdlol on 12/18/2021.
-//
-
 #ifndef EDITOR_HANDLEMODE_H
 #define EDITOR_HANDLEMODE_H
-
-
+#include "UserInputs.h"
 #include <string>
-
-class HandleMode
-{
+class HandleMode {
 public:
-    static void init_mode();
+  HandleMode() : mode{UserInputs::input_and_validate_mode()} {}
+  std::pair<int, std::string> init_mode();
+
+private:
+  int mode;
 };
 
-
-#endif //EDITOR_HANDLEMODE_H
+#endif // EDITOR_HANDLEMODE_H

@@ -1,35 +1,33 @@
-#include <algorithm>
 #include "HelperFunctions.h"
+#include <algorithm>
 
-
-void helper_functions::get_letters(const std::string_view combo, std::string &line)
-{
-  for (const char &i: combo)
-  {
-    if (isalpha(i) || ispunct(i))
-    {
+std::string helper_functions::get_letters(const std::string_view combo) {
+  std::string line;
+  line.reserve(combo.size() / 4);
+  for (const char i : combo) {
+    if (isalpha(i) || ispunct(i)) {
       line += i;
     }
   }
+  return line;
 }
 
-void helper_functions::get_numbers(const std::string_view combo, std::string &line)
-{
-  for (const char &i: combo)
-  {
-    if (isdigit(i))
-    {
+std::string helper_functions::get_numbers(const std::string_view combo) {
+  std::string line;
+  line.reserve(combo.size());
+  for (const char &i : combo) {
+    if (isdigit(i)) {
       line += i;
     }
   }
+  return line;
 }
 
-bool helper_functions::has_numbers(const std::string_view line)
-{
-  std::ranges::any_of(line.begin(), line.end(), [](const char &c) { return isdigit(c); });
+bool helper_functions::has_numbers(const std::string_view line) {
+  for (const auto x : line) {
+    if (isdigit(x)) {
+      return true;
+    }
+  }
   return false;
 }
-
-bool helper_functions::is_email(const std::string_view line) { return line.contains('@'); }
-
-bool helper_functions::check_correct_format(const std::string_view line) { return line.contains(':') && !line.empty(); }

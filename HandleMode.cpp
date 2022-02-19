@@ -1,58 +1,25 @@
-//
-// Created by xdlol on 12/18/2021.
-//
-
-#include <iostream>
 #include "HandleMode.h"
-#include "ModeEnum.h"
 #include "HandleWriting.h"
+#include "ModeEnum.h"
 #include "UserInputs.h"
+#include <iostream>
+#include <map>
+#include <utility>
 
-void HandleMode::init_mode()
-{
-    const int mode = UserInputs::input_and_validate_mode();
-    std::string mode_name;
-    switch (mode)
-    {
-        case REMOVE_SPECIAL_CHARACTERS:
-            mode_name = "remove_special_characters";
-            break;
-        case EMAILS_TO_USERNAME:
-            mode_name = "emails_to_username";
-            break;
-        case USERNAMES_TO_EMAIL:
-            mode_name = "usernames_to_email";
-            break;
-        case APPEND_TO_END:
-            mode_name = "append_to_end";
-            break;
-        case APPEND_TO_USERNAME:
-            mode_name = "append_to_username";
-            break;
-        case TO_LOWER_CASE:
-            mode_name = "to_lower_case";
-            break;
-        case TO_UPPER_CASE:
-            mode_name = "to_upper_case";
-            break;
-        case SWAP_PASS_CASE_FIRST_LETTER:
-            mode_name = "swap_pass_case_first_letter";
-            break;
-        case SWAP_PASS_NUMBERS_TO_USER:
-            mode_name = "swap_pass_numbers_to_user";
-            break;
-        case SWAP_USER_NUMBER_TO_PASS:
-            mode_name = "swap_user_numbers_to_pass";
-            break;
-        case EXTRACT_X_FROM_PASS:
-            mode_name = "extract_x_from_pass";
-            break;
-        case SWAP_NUMBERS:
-            mode_name = "swap_numbers";
-            break;
-        default:
-            mode_name = {};
-    }
-    HandleWriting write(mode, mode_name);
-    write.start_writing();
+std::pair<int, std::string> HandleMode::init_mode() {
+  std::map<int, std::string> names{
+      {REMOVE_SPECIAL_CHARACTERS, "remove_special_characters"},
+      {EMAILS_TO_USERNAME, "emails_to_username"},
+      {USERNAMES_TO_EMAIL, "usernames_to_email"},
+      {APPEND_TO_END, "append_to_end"},
+      {APPEND_TO_USERNAME, "append_to_username"},
+      {TO_LOWER_CASE, "to_lower_case"},
+      {TO_UPPER_CASE, "to_upper_case"},
+      {SWAP_PASS_CASE_FIRST_LETTER, "swap_pass_case_first_letter"},
+      {SWAP_PASS_NUMBERS_TO_USER, "swap_pass_numbers_to_user"},
+      {SWAP_USER_NUMBER_TO_PASS, "swap_user_numbers_to_pass"},
+      {EXTRACT_X_FROM_PASS, "extract_x_from_pass"},
+      {SWAP_NUMBERS, "swap_numbers"},
+  };
+  return std::make_pair(mode, names[mode]);
 }

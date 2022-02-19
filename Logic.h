@@ -1,44 +1,62 @@
-#ifndef EDITOR_C___LOGIC_H
-#define EDITOR_C___LOGIC_H
-
+#ifndef EDITOR_C___Logic_H
+#define EDITOR_C___Logic_H
 #include <string>
-
-class logic
-{
-public:
-    void remove_special_characters(std::string_view line, std::string &shell);
-
-    void emails_to_username(std::string_view line, std::string &shell);
-
-    void usernames_to_email(std::string_view line, std::string_view domain,
-                            std::string &shell);
-
-    void append_to_end(std::string_view line, std::string_view append,
-                       std::string &shell);
-
-    void append_to_username(std::string_view line, std::string_view append,
-                            std::string &shell);
-
-    void to_lower_case(std::string_view line, std::string &shell);
-
-    void to_upper_case(std::string_view line, std::string &shell);
-
-    void swap_pass_case_first_letter(std::string_view line,
-                                     std::string &shell);
-
-    void swap_pass_numbers_to_user(std::string_view line,
-                                   std::string &shell);
-
-    void swap_user_numbers_to_pass(std::string_view line,
-                                   std::string &shell);
-
-    void extract_x_from_pass(std::string_view line, int length,
-                             std::string &shell);
-
-    void swap_numbers(std::string_view line, std::string &shell);
-
-    static void delete_duplicates(const std::string &file_path);
-
+class Logic {
+  // Just to treat everything the same.
 };
 
-#endif // EDITOR_C___LOGIC_H
+class remove_special_characters : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class emails_to_username : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class usernames_to_email : Logic {
+public:
+  std::string operator()(std::string_view line, std::string_view domain);
+};
+class append_to_end : Logic {
+public:
+  std::string operator()(std::string_view line, std::string_view append);
+};
+class append_to_username : Logic {
+public:
+  std::string operator()(std::string_view line, std::string_view append);
+};
+class to_lower_case : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class to_upper_case : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class swap_pass_case_first_letter : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class swap_pass_numbers_to_user : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class swap_user_numbers_to_pass : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+class extract_x_from_pass : Logic {
+public:
+  std::string operator()(std::string_view line, int length);
+};
+class swap_numbers : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+
+class delete_duplicates : Logic {
+public:
+  std::string operator()(std::string_view line);
+};
+
+#endif // EDITOR_C___Logic_H
