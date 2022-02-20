@@ -18,6 +18,7 @@ private:
   template <class T> void handle_writing_domain(T &func, int mode);
 
 public:
+  HandleWriting(HandleWriting &&) = default;
   HandleWriting(const int mode, const std::string &mode_name)
       : mode{mode}, mode_name{mode_name},
         file_path{UserInputs::input_file_path()}, read{file_path, std::ios::in},
