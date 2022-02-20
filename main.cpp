@@ -4,16 +4,16 @@
 #include "UserInputs.h"
 #include <iostream>
 #include <string>
-int main(int argc, char *argv[]) {
+int main() {
   StartScreen::PrintStartScreen();
-
   HandleMode handle_mode;
   auto [mode, mode_name]{handle_mode.init_mode()};
-  HandleWriting write(mode, mode_name);
   try {
-    write.start_writing();
+    HandleWriting write(mode, mode_name);
+    write(mode);
   } catch (const std::runtime_error &ex) {
     std::cout << ex.what();
+    std::cin.get();
     return 1;
   }
   return 0;

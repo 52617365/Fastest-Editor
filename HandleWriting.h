@@ -13,6 +13,9 @@ private:
   std::fstream write;
 
   template <class T> void handle_writing(T &func, int mode);
+  template <class T> void handle_writing_append(T &func, int mode);
+  template <class T> void handle_writing_extract(T &func, int mode);
+  template <class T> void handle_writing_domain(T &func, int mode);
 
 public:
   HandleWriting(const int mode, const std::string &mode_name)
@@ -25,8 +28,7 @@ public:
       throw std::runtime_error("Error opening file streams.\n");
     }
   }
-
-  void start_writing();
+  void operator()(int mode);
 };
 
 #endif // EDITOR_HANDLEWRITING_H

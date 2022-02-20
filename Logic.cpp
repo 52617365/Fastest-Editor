@@ -8,7 +8,7 @@
 
 std::string remove_special_characters::operator()(std::string_view line) {
   if (line.empty()) {
-    return {};
+    return "";
   }
   std::string edit;
   edit.reserve(line.size());
@@ -21,27 +21,25 @@ std::string remove_special_characters::operator()(std::string_view line) {
 };
 
 std::string emails_to_username::operator()(std::string_view line) {
-  if (!helper_functions::is_email(line)) {
-    return std::string(line);
-  }
-
   if (const size_t colon =
           line.find_first_of(':') && colon != std::string::npos) {
 
-    if (const size_t mail = line.find_first_of('@'); mail < colon) {
+    if (const size_t mail = line.find_first_of('@');
+        mail != std::string::npos || mail < colon) {
       std::string edit;
       edit.reserve(line.size());
       edit += line.substr(0, mail);
       edit += line.substr(colon);
       return edit;
     }
+    return std::string(line);
   }
-  return {};
+  return "";
 };
 
 std::string usernames_to_email::operator()(std::string_view line,
                                            std::string_view domain) {
-  if (helper_functions::is_email(line)) {
+  if (auto index{line.find('@')}; index != std::string::npos) {
     return std::string(line);
   }
   if (const size_t colon = line.find_first_of(':');
@@ -53,7 +51,7 @@ std::string usernames_to_email::operator()(std::string_view line,
     edit += line.substr(colon);
     return edit;
   }
-  return {};
+  return "";
 };
 
 std::string append_to_end::operator()(std::string_view line,
@@ -68,7 +66,7 @@ std::string append_to_end::operator()(std::string_view line,
 
 std::string append_to_username::operator()(std::string_view line,
                                            std::string_view append) {
-  auto email = [&](int index) {
+  auto email = [&](int index) -> std::string {
     if (const size_t mail_index =
             line.find_first_of('@') && mail_index != std::string::npos) {
       std::string edit;
@@ -79,9 +77,10 @@ std::string append_to_username::operator()(std::string_view line,
       edit += line.substr(mail_index);
       return edit;
     }
+    return "";
   };
 
-  auto username = [&] {
+  auto username = [&]() -> std::string {
     if (const size_t colon_index =
             line.find_first_of(':') && colon_index != std::string::npos) {
       std::string edit;
@@ -90,10 +89,11 @@ std::string append_to_username::operator()(std::string_view line,
       edit += append;
       edit += line.substr(colon_index);
       return edit;
-    };
+    }
+    return "";
   };
   const size_t mail_index = line.find_first_of('@');
-  (mail_index != std::string::npos) ? email(mail_index) : username();
+  return (mail_index != std::string::npos) ? email(mail_index) : username();
 }
 
 std::string to_lower_case::operator()(std::string_view line) {
@@ -106,6 +106,7 @@ std::string to_lower_case::operator()(std::string_view line) {
       edit += std::tolower((c));
     }
   }
+  return edit;
 }
 
 std::string to_upper_case::operator()(std::string_view line) {
@@ -118,8 +119,8 @@ std::string to_upper_case::operator()(std::string_view line) {
       edit += c;
     }
   }
+  return edit;
 };
-
 std::string swap_pass_case_first_letter::operator()(std::string_view line) {
   if (size_t colon_index =
           line.find_first_of(':') && colon_index != std::string::npos) {
@@ -137,7 +138,7 @@ std::string swap_pass_case_first_letter::operator()(std::string_view line) {
     }
     return edit;
   }
-  return {};
+  return "";
 }
 
 std::string swap_pass_numbers_to_user::operator()(std::string_view line) {
@@ -168,6 +169,7 @@ std::string swap_pass_numbers_to_user::operator()(std::string_view line) {
     }
     return edit;
   }
+  return "";
 };
 
 std::string swap_user_numbers_to_pass::operator()(std::string_view line) {
@@ -190,7 +192,7 @@ std::string swap_user_numbers_to_pass::operator()(std::string_view line) {
     edit += user_numbers;
     return edit;
   }
-  return {};
+  return "";
 };
 
 std::string extract_x_from_pass::operator()(std::string_view line, int length) {
@@ -202,7 +204,7 @@ std::string extract_x_from_pass::operator()(std::string_view line, int length) {
     edit += line.substr(0, colon + 1);
     edit += line.substr(colon + 1, colon + 1 + length);
   }
-  return {};
+  return "";
 };
 
 std::string swap_numbers::operator()(std::string_view line) {
@@ -215,7 +217,8 @@ std::string swap_numbers::operator()(std::string_view line) {
     const auto username = line.substr(0, colon);
     const auto password = line.substr(colon + 1);
 
-    // Holds true, false if username has numbers and pass doesnt and vica verca.
+    // Holds true, false if username has numbers and pass doesnt and vica
+    // verca.
     std::pair<bool, bool> has_numbers{
         std::make_pair(helper_functions::has_numbers(username),
                        helper_functions::has_numbers(password))};
@@ -320,5 +323,6 @@ std::string swap_numbers::operator()(std::string_view line) {
       }
     }
     // If format is wrong, return empty string.
-    return {};
-  };
+  }
+  return "";
+};

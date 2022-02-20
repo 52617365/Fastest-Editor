@@ -5,10 +5,6 @@
 
 class helper_functions {
 public:
-  static bool check_correct_format(std::string_view line);
-
-  static bool is_email(std::string_view line);
-
   static bool has_numbers(std::string_view line);
 
   static std::string get_numbers(std::string_view combo);
